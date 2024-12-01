@@ -1,0 +1,65 @@
+Minimalne drzewo rozpinające - algorytm Kruskala
+
+Zapoznaj się z przykładem
+Na stronie  https://eduinf.waw.pl/inf/alg/001_search/0141.php  przeanalizuj przyklad z grafem
+
+
+
+
+Zadanie do wykonania
+Zaimplementuj w C# Algorytm tworzenia minimalnego drzewa rozpinającego.
+
+Klasy pomocnicze
+NodeG
+   int data
+   NodeG(int liczba)
+
+
+Edge
+      NodeG start;
+      NodeG end;
+      int weight;
+      Edge(NodeG start, NodeG end, int weight)
+
+
+Graph
+	List<NodeG> nodes = new List<NodeG>();
+	List<Edge> edges = new List<Edge>();
+
+
+
+Podpowiedzi w interpretacji zadania:
+Przy dodawaniu nowych krawędzi mamy 4 przypadki:
+Oba węzły krawędzi są nowe w grafie  (+2 węzły)
+
+Jeden węzeł krawędzi jest, a drugi jest nowy (+1 węzeł)
+
+Oba węzły krawędzi są już w grafie (+0 węzłów) i cykl - tego nie chcemy
+
+Oba węzły są już w grafie (+0 węzłów) łączenie dwóch niespójnych podgrafów.
+
+W przedstawionych przypadkach niepożądany jest jedynie wariant III. Dobrym sposobem odróżniania przypadków jest sprawdzanie ile nowych węzłów dojdzie do grafu.
+
+Uwaga:
+Z punktu widzenia programu, Graf to tylko Lista krawędzi i węzłów. Dodawanie nowej krawędzi - to dodanie jej do listy krawędzi (edges) oraz dodanie jej węzłów do Listy węzłów (nodes).
+
+Zaimplementuj metodę LiczbaNowyWęzłów - jej zadaniem jest sprawdzenie ile nowych węzłów dojdzie do grafu, gdyby krawędź była jego częścią. Metoda posłuży do odróżniania wariantów.
+
+
+int LiczbaNowyWęzłów(Edge k)
+
+
+
+Zaimplementuj metodę DodajKrawędz - jej zadaniem będzie wpisanie krawędzi i węzłów do niej przyczepionych do Grafu
+
+
+void DodajKrawędź(Edge k)
+
+
+
+Zaimplementuj metodę Połącz - jej zadaniem będzie łączenie dwóch grafów. Sprowadza się to do dodania wszystkich krawędzi jednego grafu do drugiego. Ponieważ wraz z krawędziami przenosimy węzły, a Graf jest spójny, dodanie samych krawędzi jest wystarczające
+
+
+void Połącz(Graph g)
+
+
