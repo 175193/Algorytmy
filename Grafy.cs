@@ -84,29 +84,6 @@ namespace Grafy
         }
     }
 
-    class NodeG
-    {
-        public int data;
-        public NodeG(int data)
-        {
-            this.data = data;
-        }
-    }
-
-    class Edge
-    {
-        public NodeG start;
-        public NodeG end;
-        public int weight;
-
-        public Edge(NodeG start, NodeG end, int weight)
-        {
-            this.start = start;
-            this.end = end;
-            this.weight = weight;
-        }
-    }
-
     class Graph
     {
         public List<NodeG> nodes;
@@ -120,7 +97,8 @@ namespace Grafy
 
         public Graph(Edge edge)
         {
-           AddEdge(edge);
+            this.nodes = new List<NodeG>();
+            AddEdge(edge);
         }
 
         public void AddEdge(Edge edge)
@@ -160,6 +138,93 @@ namespace Grafy
             {
                 this.AddEdge(edge);
             }
+        }
+
+        public List<Element> Dijkstra(NodeG start)
+        {
+            // Przygotuj tabelke
+            var table = new List<Element>();
+            foreach (NodeG node in this.nodes)
+            {
+                // Ustaw startowy element na 0
+                if (node == start)
+                {
+                    table.Add(new Element(start, 0, null));
+                }
+                var element = new Element(node);
+                table.Add(element);
+            }
+
+            // Lista ze sprawodznymi węzłami
+            var S = new List<NodeG>();
+            S.Add(start);
+            
+            foreach (Element element in table)
+            {
+                // bierzemy pierwszego najmniejszego z tabelki
+                Element candidate = table.Where(e => !S.Contains(e.node))
+                                         .OrderBy(e => e.weight)
+                                         .First();
+                S.Add(candidate.node);
+
+                // Szukamy sąsiadów
+                // W przypadku zera -> zaczynają się na 0, ale kończą na innym elemencie
+                var neighbours = this.edges.Where(e => e.start == candidate.node && !S.Contains(e.end)).ToList();
+
+                // Iterujemy po sąsiadach
+                // Np 0 - 1, waga 3
+                foreach (var neighbour in neighbours)
+                {
+                    var nextElement = table.Find(e => e.node == neighbour.end);
+                    nextElement.weight = candidate.weight + neighbour.weight;
+                }
+            }
+
+            return table;
+        }
+    }
+
+    class Element
+    {
+        public NodeG node;
+        public int weight;
+        public NodeG? before;
+
+        public Element(NodeG node)
+        {
+            this.node = node;
+            this.weight = int.MaxValue;
+            this.before = null;
+        }
+
+        public Element(NodeG node, int weight, NodeG before)
+        {
+            this.node = node;
+            this.weight = weight;
+            this.before = before;
+        }
+    }
+
+    class NodeG
+    {
+        public int data;
+        public NodeG(int data)
+        {
+            this.data = data;
+        }
+    }
+
+    class Edge
+    {
+        public NodeG start;
+        public NodeG end;
+        public int weight;
+
+        public Edge(NodeG start, NodeG end, int weight)
+        {
+            this.start = start;
+            this.end = end;
+            this.weight = weight;
         }
     }
 }
