@@ -17,13 +17,13 @@ namespace Grafy
 
             var nodes = new List<NodeG>
             {
-                node0, 
-                node1, 
-                node2, 
+                node0,
+                node1,
+                node2,
                 node3,
                 node4,
-                node5, 
-                node6, 
+                node5,
+                node6,
                 node7
             };
 
@@ -37,7 +37,7 @@ namespace Grafy
                 new Edge(node1, node4, 8),
                 new Edge(node1, node5, 6),
                 new Edge(node1, node7, 7),
-               
+
                 new Edge(node2, node3, 9),
                 new Edge(node2, node4, 4),
                 new Edge(node2, node6, 4),
@@ -62,12 +62,24 @@ namespace Grafy
 
         public static void MDR(Graph graph)
         {
-            List<Edge> T;
             List<Edge> L = graph.edges.OrderBy(x => x.weight).ToList();
+            List<Graph> graphs = new List<Graph>();
 
             foreach (Edge edge in L)
             {
-                
+                if (graph.NewNodesCount(edge) == 1 || graph.NewNodesCount(edge) == 2)
+                {
+                    graph.AddEdge(edge);
+                }
+                else
+                {
+                    graphs.Add(new Graph(edge));
+                }
+            }
+
+            foreach(Graph g in graphs)
+            {
+                graph.Join(g);
             }
         }
     }
@@ -102,13 +114,52 @@ namespace Grafy
 
         public Graph()
         {
-            this.nodes = new List<NodeG> ();
-            this.edges = new List<Edge> ();
+            this.nodes = new List<NodeG>();
+            this.edges = new List<Edge>();
+        }
+
+        public Graph(Edge edge)
+        {
+           AddEdge(edge);
         }
 
         public void AddEdge(Edge edge)
         {
-            this.edges.Add(edge);
+            if (!this.edges.Contains(edge))
+            {
+                this.edges.Add(edge);
+            }
+            if (!this.nodes.Contains(edge.start))
+            {
+                this.nodes.Add(edge.start);
+            }
+            if (!this.nodes.Contains(edge.end))
+            {
+                this.nodes.Add(edge.end);
+            }
+        }
+
+        public int NewNodesCount(Edge edge)
+        {
+            int count = 0;
+            if (!this.nodes.Contains(edge.start))
+            {
+                count++;
+            }
+            if (!this.nodes.Contains(edge.end))
+            {
+                count++;
+            }
+
+            return count;
+        }
+
+        public void Join(Graph other)
+        {
+            foreach (Edge edge in other.edges)
+            {
+                this.AddEdge(edge);
+            }
         }
     }
 }
